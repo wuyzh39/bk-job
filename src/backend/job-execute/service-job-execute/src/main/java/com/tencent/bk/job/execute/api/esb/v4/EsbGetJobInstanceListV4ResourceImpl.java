@@ -103,9 +103,15 @@ public class EsbGetJobInstanceListV4ResourceImpl implements EsbGetJobInstanceLis
         query.setTaskInstanceId(jobInstanceId);
         query.setOperator(operator);
         query.setTaskName(taskName);
-        query.setStartupModes(Collections.singletonList(TaskStartupModeEnum.getStartupMode(startupMode)));
-        query.setTaskType(TaskTypeEnum.valueOf(taskType));
-        query.setStatus(RunStatusEnum.valueOf(taskStatus));
+        if (taskStatus != null) {
+            query.setStatus(RunStatusEnum.valueOf(taskStatus));
+        }
+        if (startupMode != null) {
+            query.setStartupModes(Collections.singletonList(TaskStartupModeEnum.getStartupMode(startupMode)));
+        }
+        if (taskType != null) {
+            query.setTaskType(TaskTypeEnum.valueOf(taskType));
+        }
         query.setIp(ip);
         query.setCronTaskId(cronId);
         query.setStartTime(createTimeStart);
