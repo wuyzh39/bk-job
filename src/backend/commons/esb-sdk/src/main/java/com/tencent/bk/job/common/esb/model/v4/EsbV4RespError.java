@@ -112,6 +112,10 @@ public class EsbV4RespError {
         return buildBadRequestError(null);
     }
 
+    public static EsbV4RespError buildBadRequestError(Integer errorCode, Object[] errorParams) {
+        return buildBadRequestError(I18nUtil.getI18nMessage(String.valueOf(errorCode), errorParams));
+    }
+
     /**
      * 权限不足
      * 蓝鲸协议要求在data中写入权限信息

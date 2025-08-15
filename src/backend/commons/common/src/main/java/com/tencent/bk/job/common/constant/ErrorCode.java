@@ -184,6 +184,14 @@ public class ErrorCode {
     public static final int UNSUPPORTED_OPERATION_REPEAT_START_JOB = 1241015;
     // 非法文件
     public static final int ILLEGAL_FILE = 1241016;
+    // 不支持的Http方法
+    public static final int NOT_SUPPORTED_HTTP_REQUEST_METHOD = 1241017;
+    // 不支持的MediaType
+    public static final int NOT_SUPPORTED_MEDIA_TYPE = 1241018;
+    // 缺少路径参数
+    public static final int MISSING_PATH_VARIABLE = 1241019;
+    // 请求参数[{0}]类型错误
+    public static final int PARAMETER_TYPE_ERROR = 1241020;
     // 业务通用 end
 
     // 配置服务 start

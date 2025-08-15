@@ -93,6 +93,20 @@ public class EsbV4Response<T> {
         return resp;
     }
 
+    public static <T> EsbV4Response<T> badRequestResponse(Integer errorCode, Object[] errorParams) {
+        EsbV4RespError error = EsbV4RespError.buildBadRequestError(errorCode, errorParams);
+        EsbV4Response<T> resp = new EsbV4Response<>();
+        resp.setError(error);
+        return resp;
+    }
+
+    public static <T> EsbV4Response<T> badRequestResponse(Integer errorCode) {
+        EsbV4RespError error = EsbV4RespError.buildBadRequestError(errorCode, new Object[]{});
+        EsbV4Response<T> resp = new EsbV4Response<>();
+        resp.setError(error);
+        return resp;
+    }
+
     public static <T> EsbV4Response<T> paramValidateFail(V4ErrorCode v4ErrorCode, ErrorDetailDTO errorDetail) {
         String errMsg = null;
         if (errorDetail != null

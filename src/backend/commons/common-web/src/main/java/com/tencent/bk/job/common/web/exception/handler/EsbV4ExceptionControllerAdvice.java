@@ -59,7 +59,6 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
@@ -113,7 +112,6 @@ public class EsbV4ExceptionControllerAdvice extends ExceptionControllerAdviceBas
      * 若是非服务端的自定义异常继承于ServiceException，确保能被更具体的异常处理器处理
      */
     @ExceptionHandler(ServiceException.class)
-    @ResponseBody
     ResponseEntity<?> handleServiceException(HttpServletRequest request, ServiceException ex) {
         log.error("Handle ServiceException", ex);
         EsbV4Response<Object> resp = EsbV4Response.buildFailedResponse(
@@ -170,7 +168,6 @@ public class EsbV4ExceptionControllerAdvice extends ExceptionControllerAdviceBas
      * 当前操作无法在当前系统状态下执行，400
      */
     @ExceptionHandler(FailedPreconditionException.class)
-    @ResponseBody
     ResponseEntity<?> handleFailedPreconditionException(HttpServletRequest request, FailedPreconditionException ex) {
         String errorMsg = "Handle FailedPreconditionException, uri: " + request.getRequestURI();
         log.info(errorMsg, ex);
@@ -215,7 +212,6 @@ public class EsbV4ExceptionControllerAdvice extends ExceptionControllerAdviceBas
      * 未认证，401
      */
     @ExceptionHandler(UnauthenticatedException.class)
-    @ResponseBody
     ResponseEntity<?> handleUnauthenticatedException(HttpServletRequest request, UnauthenticatedException ex) {
         String errorMsg = "Handle UnauthenticatedException, uri: " + request.getRequestURI();
         log.warn(errorMsg, ex);
@@ -298,7 +294,7 @@ public class EsbV4ExceptionControllerAdvice extends ExceptionControllerAdviceBas
                                                                          HttpHeaders headers, HttpStatus status,
                                                                          WebRequest request) {
         log.warn("Handle HttpRequestMethodNotSupportedException", ex);
-        EsbV4Response<?> resp = EsbV4Response.badRequestResponse();
+        EsbV4Response<?> resp = EsbV4Response.badRequestResponse(ErrorCode.NOT_SUPPORTED_HTTP_REQUEST_METHOD);
         return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
     }
 
@@ -308,7 +304,7 @@ public class EsbV4ExceptionControllerAdvice extends ExceptionControllerAdviceBas
                                                                      HttpHeaders headers, HttpStatus status,
                                                                      WebRequest request) {
         log.warn("Handle HttpMediaTypeNotSupportedException", ex);
-        EsbV4Response<?> resp = EsbV4Response.badRequestResponse();
+        EsbV4Response<?> resp = EsbV4Response.badRequestResponse(ErrorCode.NOT_SUPPORTED_MEDIA_TYPE);
         return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
     }
 
@@ -327,7 +323,10 @@ public class EsbV4ExceptionControllerAdvice extends ExceptionControllerAdviceBas
     protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex, HttpHeaders headers,
                                                                HttpStatus status, WebRequest request) {
         log.warn("Handle MissingPathVariableException", ex);
-        EsbV4Response<?> resp = EsbV4Response.badRequestResponse();
+        EsbV4Response<?> resp = EsbV4Response.badRequestResponse(
+            ErrorCode.MISSING_PATH_VARIABLE,
+            new String[]{ex.getVariableName()}
+        );
         return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
     }
 
@@ -337,7 +336,10 @@ public class EsbV4ExceptionControllerAdvice extends ExceptionControllerAdviceBas
                                                                           HttpHeaders headers, HttpStatus status,
                                                                           WebRequest request) {
         log.warn("Handle MissingServletRequestParameterException", ex);
-        EsbV4Response<?> resp = EsbV4Response.badRequestResponse();
+        EsbV4Response<?> resp = EsbV4Response.badRequestResponse(
+            ErrorCode.MISSING_PARAM_WITH_PARAM_NAME,
+            new String[]{ex.getParameterName()}
+        );
         return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
     }
 
@@ -366,7 +368,10 @@ public class EsbV4ExceptionControllerAdvice extends ExceptionControllerAdviceBas
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
                                                         HttpStatus status, WebRequest request) {
         log.warn("Handle TypeMismatchException", ex);
-        EsbV4Response<?> resp = EsbV4Response.badRequestResponse();
+        EsbV4Response<?> resp = EsbV4Response.badRequestResponse(
+            ErrorCode.PARAMETER_TYPE_ERROR,
+            new String[]{ex.getPropertyName()}
+        );
         return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
     }
 
