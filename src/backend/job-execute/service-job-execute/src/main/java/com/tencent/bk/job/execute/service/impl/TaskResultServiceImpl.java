@@ -153,9 +153,9 @@ public class TaskResultServiceImpl implements TaskResultService {
                                                                 DeepPaginationCondition condition) {
         List<TaskInstanceDTO> taskInstanceList;
         if (StringUtils.isNotEmpty(taskQuery.getIp()) || StringUtils.isNotEmpty(taskQuery.getIpv6())) {
-            taskInstanceList = taskInstanceDAO.listJobInstanceStartingFromId(taskQuery, condition);
-        } else {
             taskInstanceList = taskInstanceDAO.listJobInstanceWithIpStartingFromId(taskQuery, condition);
+        } else {
+            taskInstanceList = taskInstanceDAO.listJobInstanceStartingFromId(taskQuery, condition);
         }
         computeTotalTime(taskInstanceList);
 

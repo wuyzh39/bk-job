@@ -56,6 +56,6 @@ public interface EsbGetJobInstanceListV4Resource {
         @RequestParam(value = "ip", required = false) String ip,
         @RequestParam(value = "job_cron_id", required = false) Long cronId,
         @RequestParam(value = "cursor_job_instance_id", required = false) Long cursorJobInstanceId,
-        @RequestParam(value = "length", required = false) Integer length
+        @RequestParam(value = "length", required = false, defaultValue = "10") Integer length
     );
 }

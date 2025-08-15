@@ -167,9 +167,13 @@ public class EsbGetJobInstanceListV4ResourceImpl implements EsbGetJobInstanceLis
                 ErrorCode.ILLEGAL_PARAM_WITH_PARAM_NAME,
                 "create_time_start|create_time_end");
         }
-        if (validationTarget.getLength() != null && validationTarget.getLength() < 1) {
+        if (validationTarget.getLength() != null
+            && (validationTarget.getLength() < 1 || validationTarget.getLength() > 1000)) {
             log.warn("length is illegal, length={}", validationTarget.getLength());
-            return ValidateResult.fail(ErrorCode.ILLEGAL_PARAM_WITH_PARAM_NAME, "length");
+            return ValidateResult.fail(
+                ErrorCode.ILLEGAL_PARAM_WITH_PARAM_NAME_AND_REASON,
+                new String[]{"length", "must be between 1 and 1000"}
+            );
         }
         if (validationTarget.getTaskType() != null && TaskTypeEnum.valueOf(validationTarget.getTaskType()) == null) {
             log.warn("Param type is illegal!");
